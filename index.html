@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopVerse | Modern E-Commerce Store</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+  <!-- ================= TOP NOTIFICATION BAR ================= -->
+  <div class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 text-white text-xs py-2 px-4 text-center font-medium shadow-sm flex items-center justify-center gap-2">
+    <span>✨ Free standard shipping on orders over $50! Use code <strong class="bg-white/20 px-1.5 py-0.5 rounded font-mono">SAVE10</strong> for 10% off.</span>
+    <span class="hidden md:inline text-indigo-200">|</span>
+    <span class="hidden md:inline text-indigo-100">Database Ready: SQLite / PostgreSQL / MySQL</span>
+  </div>
+
+  <!-- ================= MAIN NAVIGATION BAR ================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <a href="#" onclick="showView('catalog'); return false;" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+          </svg>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">ShopVerse</span>
+          <span class="block text-[10px] text-slate-400 font-semibold uppercase tracking-wider -mt-1">Premium Store</span>
+        </div>
+      </a>
+
+      <!-- Center Nav Links -->
+      <nav class="hidden md:flex items-center gap-1 font-medium text-sm text-slate-600">
+        <button onclick="showView('catalog')" id="nav-btn-catalog" class="nav-item px-3.5 py-2 rounded-lg hover:text-indigo-600 hover:bg-slate-100/80 transition-all text-indigo-600 font-semibold bg-indigo-50/50">
+          Catalog
+        </button>
+        <button onclick="showView('track')" id="nav-btn-track" class="nav-item px-3.5 py-2 rounded-lg hover:text-indigo-600 hover:bg-slate-100/80 transition-all">
+          Track Order
+        </button>
+        <button onclick="showView('orders')" id="nav-btn-orders" class="nav-item px-3.5 py-2 rounded-lg hover:text-indigo-600 hover:bg-slate-100/80 transition-all hidden">
+          My Orders
+        </button>
+        <button onclick="showView('admin')" id="nav-btn-admin" class="nav-item px-3 py-1.5 rounded-lg text-purple-700 bg-purple-50 hover:bg-purple-100 font-semibold transition-all border border-purple-200 hidden flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Admin Portal
+        </button>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-3">
+        <!-- Quick Demo Switcher -->
+        <div class="hidden lg:flex items-center gap-1.5 text-xs bg-slate-100 px-2 py-1 rounded-lg border border-slate-200">
+          <span class="text-slate-400 font-medium">Quick Demo:</span>
+          <button onclick="quickLogin('admin')" class="px-2 py-0.5 rounded bg-white hover:bg-slate-200 text-purple-700 font-semibold shadow-xs transition">Admin</button>
+          <button onclick="quickLogin('user')" class="px-2 py-0.5 rounded bg-white hover:bg-slate-200 text-indigo-700 font-semibold shadow-xs transition">Customer</button>
+        </div>
+
+        <!-- User Profile / Auth Button -->
+        <div id="auth-section">
+          <!-- Populated by JavaScript -->
+          <button onclick="openAuthModal('login')" class="text-sm font-semibold text-slate-700 hover:text-indigo-600 px-3 py-2 rounded-lg border border-slate-200 hover:border-indigo-200 transition">
+            Sign In
+          </button>
+        </div>
+
+        <!-- Cart Button -->
+        <button onclick="toggleCartDrawer(true)" class="relative p-2.5 rounded-xl bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 transition flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span id="cart-badge" class="absolute -top-1 -right-1 bg-indigo-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white scale-0 transition-transform duration-200">
+            0
+          </span>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Nav Dropdown -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 px-4 py-3 bg-white space-y-2">
+      <button onclick="showView('catalog'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-slate-700 font-medium hover:bg-slate-50">Catalog</button>
+      <button onclick="showView('track'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-slate-700 font-medium hover:bg-slate-50">Track Order</button>
+      <button onclick="showView('orders'); toggleMobileMenu();" id="mobile-nav-orders" class="hidden block w-full text-left px-3 py-2 rounded-lg text-slate-700 font-medium hover:bg-slate-50">My Orders</button>
+      <button onclick="showView('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden block w-full text-left px-3 py-2 rounded-lg text-purple-700 font-semibold hover:bg-purple-50">Admin Portal</button>
+    </div>
+  </header>
+
+  <!-- ================= VIEW 1: CATALOG VIEW ================= -->
+  <main id="catalog-view" class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Hero Banner -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-8 md:p-12 mb-10 shadow-xl border border-slate-800">
+      <div class="relative z-10 max-w-2xl">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 mb-4">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          2026 Spring Flagship Collection
+        </span>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight mb-4">
+          Curated Tech, Audio & Lifestyle Essentials.
+        </h1>
+        <p class="text-slate-300 text-sm sm:text-base mb-6 leading-relaxed">
+          Explore precision-crafted gear with instant order fulfillment, live status tracking, and seamless checkout.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="#product-grid" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-lg shadow-indigo-600/30 transition">
+            Explore All Products
+          </a>
+          <button onclick="showView('track')" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm backdrop-blur-sm transition border border-white/15">
+            Track Existing Order
+          </button>
+        </div>
+      </div>
+      <!-- Background Abstract Glow -->
+      <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute right-40 -top-20 w-72 h-72 bg-violet-500/20 rounded-full blur-3xl pointer-events-none"></div>
+    </div>
+
+    <!-- Search & Filter Control Bar -->
+    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 mb-8 space-y-4">
+      <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        
+        <!-- Live Search Input -->
+        <div class="relative flex-1">
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Search products by name, brand, or feature..." 
+            class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm bg-slate-50/50"
+            oninput="handleSearchInput(event)"
+          >
+          <svg class="w-5 h-5 text-slate-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+
+        <!-- Sorting & In-Stock Filter -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label for="sort-select" class="text-xs font-semibold text-slate-500 uppercase">Sort:</label>
+            <select id="sort-select" onchange="loadProducts()" class="text-sm font-medium border border-slate-200 rounded-xl px-3 py-2 bg-slate-50/50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="featured">Featured First</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="rating">Highest Rated</option>
+              <option value="newest">Newest Arrivals</option>
+            </select>
+          </div>
+
+          <label class="flex items-center gap-2 text-sm font-medium text-slate-600 cursor-pointer select-none bg-slate-100/70 hover:bg-slate-100 px-3 py-2 rounded-xl border border-slate-200">
+            <input type="checkbox" id="stock-filter" onchange="loadProducts()" class="rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+            <span>In Stock Only</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div id="category-pills" class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none pt-2 border-t border-slate-100">
+        <!-- Rendered dynamically -->
+        <button class="px-4 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap shadow-xs">All</button>
+      </div>
+    </div>
+
+    <!-- Product Grid & Empty State -->
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <div id="product-empty-state" class="hidden text-center py-16 bg-white rounded-3xl border border-dashed border-slate-300 p-8">
+      <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4 text-slate-400">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <h3 class="text-lg font-bold text-slate-700">No products found</h3>
+      <p class="text-sm text-slate-500 max-w-sm mx-auto mt-1 mb-4">Try clearing your search query or choosing another category.</p>
+      <button onclick="resetFilters()" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700">Reset all filters</button>
+    </div>
+
+  </main>
+
+  <!-- ================= VIEW 2: CHECKOUT VIEW ================= -->
+  <main id="checkout-view" class="hidden flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6 flex items-center gap-3">
+      <button onclick="showView('catalog')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-600 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      </button>
+      <h1 class="text-2xl font-bold text-slate-900">Checkout & Order Placement</h1>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Checkout Form -->
+      <div class="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+        <form id="checkout-form" onsubmit="handlePlaceOrder(event)">
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">1</span>
+                Contact Information
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Full Name *</label>
+                  <input type="text" id="cust-name" required placeholder="Alex Morgan" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Email Address *</label>
+                  <input type="email" id="cust-email" required placeholder="alex@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Phone Number (Optional)</label>
+                  <input type="tel" id="cust-phone" placeholder="+1 (555) 019-2834" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-6">
+              <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">2</span>
+                Shipping Destination
+              </h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Street Address *</label>
+                  <input type="text" id="cust-address" required placeholder="123 Market St, Apt 4B" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">City *</label>
+                    <input type="text" id="cust-city" required placeholder="San Francisco" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Postal Code *</label>
+                    <input type="text" id="cust-postal" required placeholder="94103" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Country</label>
+                    <select id="cust-country" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+                      <option value="USA">United States</option>
+                      <option value="CAN">Canada</option>
+                      <option value="GBR">United Kingdom</option>
+                      <option value="IND">India</option>
+                      <option value="AUS">Australia</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-6">
+              <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">3</span>
+                Payment Method
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <label class="flex flex-col p-3.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/30 cursor-pointer">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-sm text-slate-800">Credit Card</span>
+                    <input type="radio" name="payment_method" value="card" checked class="text-indigo-600">
+                  </div>
+                  <span class="text-xs text-slate-500">Instant Demo Auth</span>
+                </label>
+                <label class="flex flex-col p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-sm text-slate-800">UPI / QR</span>
+                    <input type="radio" name="payment_method" value="upi" class="text-indigo-600">
+                  </div>
+                  <span class="text-xs text-slate-500">Instant Digital Pay</span>
+                </label>
+                <label class="flex flex-col p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-sm text-slate-800">Pay on Delivery</span>
+                    <input type="radio" name="payment_method" value="cod" class="text-indigo-600">
+                  </div>
+                  <span class="text-xs text-slate-500">Cash on Delivery</span>
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" id="submit-order-btn" class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-base shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Place Order & Pay
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Checkout Order Summary -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <h2 class="text-lg font-bold text-slate-900 mb-4">Order Summary</h2>
+          <div id="checkout-items-list" class="divide-y divide-slate-100 max-h-80 overflow-y-auto mb-4">
+            <!-- Injected by JS -->
+          </div>
+
+          <!-- Promo Code Input -->
+          <div class="flex gap-2 mb-4 pt-4 border-t border-slate-100">
+            <input type="text" id="checkout-promo-input" placeholder="Promo code (e.g. SAVE10)" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-sm font-mono uppercase focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <button onclick="applyCheckoutPromo()" class="px-4 py-2 bg-slate-800 text-white rounded-xl text-xs font-bold hover:bg-slate-700 transition">Apply</button>
+          </div>
+          <p id="promo-applied-tag" class="hidden text-xs text-emerald-600 font-semibold mb-3"></p>
+
+          <!-- Pricing Breakdown -->
+          <div class="space-y-2.5 text-sm pt-3 border-t border-slate-100">
+            <div class="flex justify-between text-slate-500">
+              <span>Subtotal</span>
+              <span id="co-subtotal">$0.00</span>
+            </div>
+            <div id="co-discount-row" class="hidden flex justify-between text-emerald-600 font-medium">
+              <span>Discount</span>
+              <span id="co-discount">-$0.00</span>
+            </div>
+            <div class="flex justify-between text-slate-500">
+              <span>Estimated Tax (5%)</span>
+              <span id="co-tax">$0.00</span>
+            </div>
+            <div class="flex justify-between text-slate-500">
+              <span>Shipping</span>
+              <span id="co-shipping">$0.00</span>
+            </div>
+            <div class="flex justify-between text-base font-extrabold text-slate-900 pt-3 border-t border-slate-100">
+              <span>Total</span>
+              <span id="co-total" class="text-indigo-600">$0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4 text-xs text-indigo-900 flex items-start gap-3">
+          <svg class="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <p>
+            <strong>Simulated Secure Checkout:</strong> Payments are processed safely in demo sandbox mode. Stock inventory is updated and an instant tracking number is generated.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= VIEW 3: ORDER SUCCESS VIEW ================= -->
+  <main id="order-success-view" class="hidden flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-12 text-center">
+    <div class="bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-slate-200">
+      <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h1 class="text-3xl font-extrabold text-slate-900 mb-2">Order Confirmed!</h1>
+      <p class="text-slate-500 text-sm max-w-md mx-auto mb-6">
+        Thank you for shopping with ShopVerse! We've received your order and have already queued it for packing.
+      </p>
+
+      <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 max-w-md mx-auto text-left mb-8">
+        <div class="flex justify-between items-center pb-3 border-b border-slate-200 text-xs text-slate-500 uppercase font-semibold">
+          <span>Order Number</span>
+          <span class="text-indigo-600 font-mono text-sm font-bold" id="success-order-num">ORD-2026-XXXX</span>
+        </div>
+        <div class="pt-3 space-y-1.5 text-xs text-slate-600">
+          <p><strong>Customer:</strong> <span id="success-cust-name">-</span></p>
+          <p><strong>Total Amount:</strong> <span id="success-total" class="font-bold text-slate-900">$0.00</span></p>
+          <p><strong>Status:</strong> <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">Pending</span></p>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button id="success-track-btn" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-md shadow-indigo-600/30 transition">
+          Track Order Progress
+        </button>
+        <button onclick="showView('catalog')" class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition">
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= VIEW 4: TRACK ORDER VIEW ================= -->
+  <main id="track-view" class="hidden flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Live Order Tracking</h1>
+      <p class="text-slate-500 text-sm mt-2 max-w-md mx-auto">
+        Enter your order reference (e.g., <code class="font-mono text-indigo-600 font-semibold cursor-pointer" onclick="document.getElementById('track-search-input').value='ORD-2026-9810'; searchTracking();">ORD-2026-9810</code>) to view real-time delivery milestones.
+      </p>
+    </div>
+
+    <!-- Search Input Box -->
+    <div class="max-w-xl mx-auto mb-10">
+      <div class="flex gap-2">
+        <div class="relative flex-1">
+          <input 
+            type="text" 
+            id="track-search-input" 
+            placeholder="e.g. ORD-2026-9810 or Order ID" 
+            class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white shadow-sm font-mono"
+            onkeypress="if(event.key === 'Enter') searchTracking()"
+          >
+          <svg class="w-5 h-5 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <button onclick="searchTracking()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5">
+          Track
+        </button>
+      </div>
+    </div>
+
+    <!-- Tracking Result Container -->
+    <div id="tracking-result-card" class="hidden bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-8">
+      <!-- Order Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+        <div>
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tracking Reference</span>
+          <h2 class="text-2xl font-black text-slate-900 font-mono" id="track-order-num">-</h2>
+          <p class="text-xs text-slate-500 mt-1" id="track-placed-date">-</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="track-status-pill" class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-100 text-indigo-700">
+            Pending
+          </span>
+        </div>
+      </div>
+
+      <!-- Visual Step Progress Tracker -->
+      <div>
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-6">Delivery Milestones</h3>
+        <div class="relative">
+          <!-- Step Indicators -->
+          <div id="tracking-steps-container" class="grid grid-cols-5 gap-2 text-center text-xs">
+            <!-- Injected by orders.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkpoint Activity Log -->
+      <div class="pt-6 border-t border-slate-100">
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Tracking History & Checkpoints</h3>
+        <div id="tracking-milestone-list" class="space-y-4">
+          <!-- Injected by orders.js -->
+        </div>
+      </div>
+
+      <!-- Items & Shipping Summary -->
+      <div class="pt-6 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="text-xs font-bold text-slate-400 uppercase mb-3">Items in this Package</h4>
+          <div id="track-items-list" class="space-y-3">
+            <!-- Items injected by JS -->
+          </div>
+        </div>
+        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 text-xs space-y-2">
+          <h4 class="text-xs font-bold text-slate-400 uppercase mb-3">Shipping & Payment Summary</h4>
+          <p><strong>Recipient:</strong> <span id="track-recipient">-</span></p>
+          <p><strong>Shipping Address:</strong> <span id="track-address">-</span></p>
+          <p><strong>Payment Method:</strong> <span id="track-payment">-</span></p>
+          <p class="pt-2 border-t border-slate-200 text-sm font-bold text-slate-900">
+            Total Paid: <span id="track-total" class="text-indigo-600">$0.00</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tracking Not Found / Error -->
+    <div id="tracking-not-found" class="hidden text-center py-12 bg-white rounded-3xl border border-dashed border-red-200 p-8">
+      <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </div>
+      <h3 class="text-base font-bold text-slate-800">Order not found</h3>
+      <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Please check your tracking number or order ID. Try the sample order: <button onclick="document.getElementById('track-search-input').value='ORD-2026-9810'; searchTracking();" class="text-indigo-600 font-bold underline">ORD-2026-9810</button></p>
+    </div>
+  </main>
+
+  <!-- ================= VIEW 5: MY ORDERS (AUTHENTICATED) ================= -->
+  <main id="orders-view" class="hidden flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-black text-slate-900">My Order History</h1>
+        <p class="text-sm text-slate-500 mt-1">Review your past orders, inspect receipts, and track shipments.</p>
+      </div>
+      <button onclick="loadUserOrders()" class="px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100 transition flex items-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        Refresh
+      </button>
+    </div>
+
+    <div id="user-orders-list" class="space-y-6">
+      <!-- Injected by orders.js -->
+    </div>
+
+    <div id="user-orders-empty" class="hidden text-center py-16 bg-white rounded-3xl border border-dashed border-slate-300 p-8">
+      <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4 text-slate-400">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+      </div>
+      <h3 class="text-lg font-bold text-slate-700">No orders placed yet</h3>
+      <p class="text-sm text-slate-500 max-w-sm mx-auto mt-1 mb-4">Start exploring our catalog and place your first order!</p>
+      <button onclick="showView('catalog')" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-500 transition">Browse Products</button>
+    </div>
+  </main>
+
+  <!-- ================= VIEW 6: ADMIN DASHBOARD ================= -->
+  <main id="admin-view" class="hidden flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-purple-100 text-purple-700">ADMIN CONTROL PANEL</span>
+        </div>
+        <h1 class="text-2xl font-black text-slate-900 mt-1">Store Management & Analytics</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="openProductModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Add New Product
+        </button>
+        <button onclick="loadAdminDashboard()" class="p-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Admin Metric Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex items-center justify-between">
+        <div>
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Sales</span>
+          <h3 class="text-2xl font-black text-slate-900 mt-1" id="stat-revenue">$0.00</h3>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex items-center justify-between">
+        <div>
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Orders</span>
+          <h3 class="text-2xl font-black text-slate-900 mt-1" id="stat-orders">0</h3>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex items-center justify-between">
+        <div>
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Catalog Products</span>
+          <h3 class="text-2xl font-black text-slate-900 mt-1" id="stat-products">0</h3>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex items-center justify-between">
+        <div>
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Low Stock Alert</span>
+          <h3 class="text-2xl font-black text-amber-600 mt-1" id="stat-low-stock">0</h3>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Tabs: Products vs Orders -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="flex border-b border-slate-200 px-6 pt-4 gap-6 font-semibold text-sm">
+        <button onclick="switchAdminTab('products')" id="admin-tab-btn-products" class="pb-3 text-indigo-600 border-b-2 border-indigo-600 transition">
+          Products Inventory
+        </button>
+        <button onclick="switchAdminTab('orders')" id="admin-tab-btn-orders" class="pb-3 text-slate-500 hover:text-slate-800 transition">
+          Customer Orders & Tracking Controls
+        </button>
+      </div>
+
+      <!-- Tab 1: Products Inventory Table -->
+      <div id="admin-tab-products" class="p-6">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold tracking-wider">
+              <tr>
+                <th class="py-3 px-4">Product</th>
+                <th class="py-3 px-4">Category</th>
+                <th class="py-3 px-4">Price</th>
+                <th class="py-3 px-4">Stock Status</th>
+                <th class="py-3 px-4">Rating</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-products-tbody" class="divide-y divide-slate-100">
+              <!-- Rendered via admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Orders Management Table -->
+      <div id="admin-tab-orders" class="p-6 hidden">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-500">Filter Status:</span>
+            <select id="admin-order-status-filter" onchange="loadAdminOrders()" class="text-xs font-medium border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50">
+              <option value="All">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Processing">Processing</option>
+              <option value="Shipped">Shipped</option>
+              <option value="Out for Delivery">Out for Delivery</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold tracking-wider">
+              <tr>
+                <th class="py-3 px-4">Order Ref</th>
+                <th class="py-3 px-4">Customer</th>
+                <th class="py-3 px-4">Items / Total</th>
+                <th class="py-3 px-4">Placed Date</th>
+                <th class="py-3 px-4">Live Status Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-tbody" class="divide-y divide-slate-100">
+              <!-- Rendered via admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= CART SLIDE-OVER DRAWER ================= -->
+  <div id="cart-drawer-backdrop" onclick="toggleCartDrawer(false)" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <h2 class="text-lg font-bold text-slate-900">Your Shopping Cart</h2>
+        <span id="drawer-item-count" class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">0</span>
+      </div>
+      <button onclick="toggleCartDrawer(false)" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Drawer Items List -->
+    <div id="cart-drawer-items" class="flex-1 overflow-y-auto p-5 divide-y divide-slate-100">
+      <!-- Injected by app.js -->
+    </div>
+
+    <!-- Drawer Empty State -->
+    <div id="cart-drawer-empty" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
+      <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      </div>
+      <h3 class="text-base font-bold text-slate-700">Your cart is empty</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-5">Explore our featured collection and add items to your cart.</p>
+      <button onclick="toggleCartDrawer(false); showView('catalog');" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-xs hover:bg-indigo-500 transition">Start Shopping</button>
+    </div>
+
+    <!-- Drawer Footer & Checkout Action -->
+    <div id="cart-drawer-footer" class="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-500">Subtotal</span>
+        <span id="drawer-subtotal" class="font-bold text-slate-900">$0.00</span>
+      </div>
+      <p class="text-[11px] text-slate-400">Taxes, shipping, and promos calculated at checkout.</p>
+      <button onclick="proceedToCheckout()" class="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md shadow-indigo-600/30 transition flex items-center justify-center gap-2">
+        <span>Proceed to Checkout</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </button>
+      <button onclick="clearCart()" class="w-full text-center text-xs text-slate-400 hover:text-red-500 transition py-1">Clear Cart</button>
+    </div>
+  </aside>
+
+  <!-- ================= PRODUCT DETAIL MODAL ================= -->
+  <div id="product-detail-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div onclick="closeProductDetailModal()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
+    <div class="relative bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl z-10 overflow-hidden max-h-[90vh] overflow-y-auto">
+      <button onclick="closeProductDetailModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div class="rounded-2xl overflow-hidden bg-slate-100 aspect-square">
+          <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
+        </div>
+        <div class="space-y-4">
+          <div>
+            <span id="modal-cat" class="px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600">Category</span>
+            <h2 id="modal-title" class="text-xl font-black text-slate-900 mt-2">Product Title</h2>
+            <div class="flex items-center gap-2 mt-1 text-xs text-slate-500">
+              <span id="modal-rating" class="text-amber-500 font-bold flex items-center gap-1">★ 4.8</span>
+              <span>•</span>
+              <span id="modal-reviews">50+ reviews</span>
+            </div>
+          </div>
+
+          <p id="modal-desc" class="text-sm text-slate-600 leading-relaxed">Description goes here.</p>
+
+          <div class="pt-3 border-t border-slate-100">
+            <span class="text-xs text-slate-400 uppercase font-semibold">Price</span>
+            <div class="flex items-baseline gap-2">
+              <span id="modal-price" class="text-3xl font-black text-slate-900">$0.00</span>
+              <span id="modal-stock-badge" class="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">In Stock</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 pt-2">
+            <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">
+              <button onclick="adjustModalQty(-1)" class="px-3 py-2 text-slate-600 hover:bg-slate-100 font-bold">-</button>
+              <span id="modal-qty" class="px-4 py-2 text-sm font-bold text-slate-900">1</span>
+              <button onclick="adjustModalQty(1)" class="px-3 py-2 text-slate-600 hover:bg-slate-100 font-bold">+</button>
+            </div>
+            <button id="modal-add-btn" onclick="addModalItemToCart()" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-md shadow-indigo-600/30 transition flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= AUTH MODAL (LOGIN / REGISTER) ================= -->
+  <div id="auth-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div onclick="closeAuthModal()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
+    <div class="relative bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl z-10 overflow-hidden">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Auth Modal Tabs -->
+      <div class="flex border-b border-slate-100 mb-6">
+        <button onclick="setAuthTab('login')" id="auth-tab-login" class="flex-1 pb-3 text-center font-bold text-sm text-indigo-600 border-b-2 border-indigo-600 transition">
+          Sign In
+        </button>
+        <button onclick="setAuthTab('register')" id="auth-tab-register" class="flex-1 pb-3 text-center font-bold text-sm text-slate-400 transition">
+          Create Account
+        </button>
+      </div>
+
+      <!-- Quick Demo Login Buttons -->
+      <div class="mb-5 p-3 rounded-2xl bg-indigo-50/70 border border-indigo-100">
+        <span class="block text-[11px] font-bold text-indigo-700 uppercase tracking-wider mb-2">⚡ Quick 1-Click Role Logins:</span>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="quickLogin('admin')" class="px-2.5 py-1.5 rounded-xl bg-purple-600 text-white font-bold text-xs hover:bg-purple-700 transition">
+            Admin Demo
+          </button>
+          <button onclick="quickLogin('user')" class="px-2.5 py-1.5 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition">
+            Customer Demo
+          </button>
+        </div>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="login-form" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Email</label>
+          <input type="email" id="login-email" required placeholder="admin@store.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Password</label>
+          <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <p id="login-error" class="hidden text-xs text-red-600 font-semibold"></p>
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-md shadow-indigo-600/30 transition">
+          Sign In
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" onsubmit="handleRegisterSubmit(event)" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Full Name</label>
+          <input type="text" id="reg-name" required placeholder="Jordan Smith" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Email</label>
+          <input type="email" id="reg-email" required placeholder="jordan@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Password</label>
+          <input type="password" id="reg-password" required minlength="6" placeholder="Min. 6 characters" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Account Role</label>
+          <select id="reg-role" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+            <option value="customer">Customer (Shop & Order)</option>
+            <option value="admin">Admin (Manage Products & Orders)</option>
+          </select>
+        </div>
+        <p id="register-error" class="hidden text-xs text-red-600 font-semibold"></p>
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-md shadow-indigo-600/30 transition">
+          Create Account
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= ADMIN PRODUCT CREATE/EDIT MODAL ================= -->
+  <div id="admin-product-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div onclick="closeAdminProductModal()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
+    <div class="relative bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl z-10 max-h-[90vh] overflow-y-auto">
+      <button onclick="closeAdminProductModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <h2 id="admin-product-modal-title" class="text-xl font-bold text-slate-900 mb-4">Add New Product</h2>
+      
+      <form id="admin-product-form" onsubmit="handleSaveProduct(event)" class="space-y-4">
+        <input type="hidden" id="admin-prod-id">
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Product Title *</label>
+          <input type="text" id="admin-prod-name" required placeholder="e.g. Wireless Ergonomic Mouse" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Price ($) *</label>
+            <input type="number" id="admin-prod-price" step="0.01" min="0.01" required placeholder="79.99" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Stock Units *</label>
+            <input type="number" id="admin-prod-stock" min="0" required placeholder="20" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Category *</label>
+            <input type="text" id="admin-prod-cat" required placeholder="Electronics, Audio, etc." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div class="flex items-center pt-5">
+            <label class="flex items-center gap-2 text-sm font-medium text-slate-700 cursor-pointer">
+              <input type="checkbox" id="admin-prod-featured" class="rounded text-indigo-600 h-4 w-4">
+              <span>Featured Product</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Image URL *</label>
+          <input type="url" id="admin-prod-img" required placeholder="https://images.unsplash.com/..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Description *</label>
+          <textarea id="admin-prod-desc" rows="3" required placeholder="Product specifications, features, and warranty details..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-md shadow-indigo-600/30 transition">
+          Save Product
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-700">ShopVerse Online Store</span>
+        <span>•</span>
+        <span>Role-Based Access • Product Management • Order Tracking</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span>FastAPI + SQLAlchemy + SQLite / Postgres / MySQL</span>
+        <span>•</span>
+        <a href="/docs" target="_blank" class="text-indigo-600 font-bold hover:underline">API Swagger Docs (/docs)</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/orders.js"></script>
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>

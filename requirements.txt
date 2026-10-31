@@ -1,0 +1,18 @@
+# Core Framework & Server
+fastapi>=0.110.0
+uvicorn>=0.28.0
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+
+# Database & ORM
+SQLAlchemy>=2.0.0
+
+# Optional Database Drivers for PostgreSQL and MySQL
+# psycopg2-binary>=2.9.9   # Uncomment if using PostgreSQL
+# pymysql>=1.1.0           # Uncomment if using MySQL
+# pymongo>=4.6.0           # Uncomment if using MongoDB
+
+# Security & Authentication
+PyJWT>=2.8.0
+bcrypt>=4.1.0
+python-dotenv>=1.0.0

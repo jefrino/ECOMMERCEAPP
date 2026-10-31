@@ -1,0 +1,72 @@
+/* Custom Store Styling */
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Card hover lift effect */
+.product-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Timeline step connector lines */
+.step-item {
+  position: relative;
+}
+.step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: calc(50% + 14px);
+  width: calc(100% - 28px);
+  height: 3px;
+  background-color: #e2e8f0;
+  z-index: 0;
+}
+.step-item.completed:not(:last-child)::after {
+  background-color: #4f46e5;
+}
+
+/* Slide Drawer backdrop transition */
+#cart-drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#cart-drawer.open {
+  transform: translateX(0);
+}
+
+/* Toast styling */
+.toast-item {
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
